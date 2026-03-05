@@ -13,12 +13,14 @@ class TimeTrackerViewModel : ViewModel() {
     private val _currentSessionStart = MutableStateFlow<Long?>(null)
     val currentSessionStart: StateFlow<Long?> = _currentSessionStart
 
-    val currentSessionTime: StateFlow<Long?> = _
+    private val _currentSessionLength = MutableStateFlow<Long?>(null)
+
+    val currentSessionTime: StateFlow<Long?> = _currentSessionLength
     fun startSession() {
         if (_currentSessionStart.value != null) return
-
         val start = System.currentTimeMillis()
         _currentSessionStart.value = start
+        currentTimeMillis()
 
         _sessions.update {
             it + Session(startTimeMillis = start, endTimeMillis = null)
@@ -37,17 +39,25 @@ class TimeTrackerViewModel : ViewModel() {
         }
 
         _currentSessionStart.value = null
+        _currentSessionLength.value = null
     }
 
     fun totalTimeTodayMillis(): Long {
         return _sessions.value.sumOf { it.durationMillis }
     }
 
-    fun currentTimeMillis(): Long {
+    fun currentTimeMillis() {
         if (_currentSessionStart.value == null) {
-            return 0
+            return
         }
 
-        return  System.currentTimeMillis() - _currentSessionStart.value!!
+        _currentSessionLength.value =  System.currentTimeMillis() - _currentSessionStart.value!!
+    }
+
+    fun currTimeMillis(): Long {
+        if (_currentSessionLength.value == null) {
+            return 0
+        }
+        return _currentSessionLength.value!!
     }
 }

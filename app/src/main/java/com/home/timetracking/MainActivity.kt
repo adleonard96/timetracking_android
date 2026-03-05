@@ -31,13 +31,15 @@ class MainActivity : ComponentActivity() {
 fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
     val sessions by viewModel.sessions.collectAsState()
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
-    val currentSessionTime by viewModel.
+    val currentSessionTime by viewModel.currentSessionTime.collectAsState()
 
     val totalTime = remember(sessions, currentSessionStart) {
         viewModel.totalTimeTodayMillis()
     }
 
-    val currentTime = remember {  }
+    val currentTime = remember {
+        viewModel.currTimeMillis()
+    }
 
     Column(
         modifier = Modifier
@@ -51,7 +53,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
             style = MaterialTheme.typography.headlineMedium
         )
         Text (
-            text = "Current time: ${formatDuration(millis = )}"
+            text = "Current time: ${formatDuration(millis = currentTime)}"
         )
         Button(
             onClick = {
