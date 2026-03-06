@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.delay
 
 
 class MainActivity : ComponentActivity() {
@@ -52,9 +53,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
             text = "Total today: ${formatDuration(totalTime)}",
             style = MaterialTheme.typography.headlineMedium
         )
-        Text (
-            text = "Current time: ${formatDuration(millis = currentTime)}"
-        )
+        Stopwatch()
         Button(
             onClick = {
                 if (currentSessionStart == null) {
@@ -73,5 +72,30 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
             )
         }
 
+    }
+}
+
+@Composable
+fun Stopwatch(viewModel: StopwatchViewModel = viewModel()) {
+    var elapsedTime = viewModel.elapsedTime
+
+    Column {
+        Text(text = "Time: ${elapsedTime / 1000}.${(elapsedTime % 1000)/100}")
+
+        Row {
+            Button(onClick = { viewModel.start() }) {
+                Text("Start")
+            }
+
+            Button(onClick = { viewModel.stop() }) {
+                Text("Stop")
+            }
+
+            Button(onClick = {
+                viewModel.reset()
+            }) {
+                Text("Reset")
+            }
+        }
     }
 }
