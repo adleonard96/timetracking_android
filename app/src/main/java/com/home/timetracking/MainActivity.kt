@@ -29,10 +29,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
+fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchViewModel: StopwatchViewModel = viewModel()) {
     val sessions by viewModel.sessions.collectAsState()
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
     val currentSessionTime by viewModel.currentSessionTime.collectAsState()
+    val elapsedTime = stopWatchViewModel.elapsedTime
 
     val totalTime = remember(sessions, currentSessionStart) {
         viewModel.totalTimeTodayMillis()
@@ -50,16 +51,18 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
     ) {
 
         Text(
-            text = "Total today: ${formatDuration(totalTime)}",
+//            text = "Total today: ${formatDuration(totalTime)}",
+            text = "Time: ${elapsedTime / 1000}.${(elapsedTime % 1000)/100}",
             style = MaterialTheme.typography.headlineMedium
         )
-        Stopwatch()
         Button(
             onClick = {
                 if (currentSessionStart == null) {
                     viewModel.startSession()
+                    stopWatchViewModel.start()
                 } else {
                     viewModel.stopSession()
+                    stopWatchViewModel.stop()
                 }
             }
         ) {
@@ -77,7 +80,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel()) {
 
 @Composable
 fun Stopwatch(viewModel: StopwatchViewModel = viewModel()) {
-    var elapsedTime = viewModel.elapsedTime
+    val elapsedTime = viewModel.elapsedTime
 
     Column {
         Text(text = "Time: ${elapsedTime / 1000}.${(elapsedTime % 1000)/100}")
