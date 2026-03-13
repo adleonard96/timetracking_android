@@ -69,36 +69,8 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
             Text(if (currentSessionStart == null) "Start" else "Stop")
         }
 
-        if (currentSessionStart != null) {
-            Text(
-                text = "Started at: ${formatTime(currentSessionStart!!)}"
-            )
-        }
-
-    }
-}
-
-@Composable
-fun Stopwatch(viewModel: StopwatchViewModel = viewModel()) {
-    val elapsedTime = viewModel.elapsedTime
-
-    Column {
-        Text(text = "Time: ${elapsedTime / 1000}.${(elapsedTime % 1000)/100}")
-
-        Row {
-            Button(onClick = { viewModel.start() }) {
-                Text("Start")
-            }
-
-            Button(onClick = { viewModel.stop() }) {
-                Text("Stop")
-            }
-
-            Button(onClick = {
-                viewModel.reset()
-            }) {
-                Text("Reset")
-            }
+        sessions.forEach { session ->
+            Text(text = "${session.startTimeMillis}")
         }
     }
 }
