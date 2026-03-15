@@ -27,6 +27,11 @@ class TimeTrackerViewModel : ViewModel() {
         }
     }
 
+    fun clearSessions() {
+        _sessions.update {
+            emptyList()
+        }
+    }
     fun stopSession() {
         val start = _currentSessionStart.value ?: return
 

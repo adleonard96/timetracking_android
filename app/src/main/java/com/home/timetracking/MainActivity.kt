@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class MainActivity : ComponentActivity() {
@@ -52,25 +54,42 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
 
         Text(
 //            text = "Total today: ${formatDuration(totalTime)}",
-            text = "Time: ${elapsedTime / 1000}.${(elapsedTime % 1000)/100}",
+            text = "Hours today: %.5f".format(elapsedTime / 3_600_000.0),
             style = MaterialTheme.typography.headlineMedium
         )
-        Button(
-            onClick = {
-                if (currentSessionStart == null) {
-                    viewModel.startSession()
-                    stopWatchViewModel.start()
-                } else {
-                    viewModel.stopSession()
-                    stopWatchViewModel.stop()
+        Row(){
+            Button(
+                onClick = {
+                    if (currentSessionStart == null) {
+                        viewModel.startSession()
+                        stopWatchViewModel.start()
+                    } else {
+                        viewModel.stopSession()
+                        stopWatchViewModel.stop()
+                    }
                 }
+            ) {
+                Text(if (currentSessionStart == null) "Start" else "Stop")
             }
-        ) {
-            Text(if (currentSessionStart == null) "Start" else "Stop")
+            Button(
+                onClick = {
+                    viewModel.clearSessions()
+                }
+            ) {
+                Text("Clear")
+            }
         }
 
         sessions.forEach { session ->
-            Text(text = "${session.startTimeMillis}")
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            val timeFormat = SimpleDateFormat("HH:mm:ss")
+            val startDate = Date(session.startTimeMillis)
+            Text(text = "Date: ${sdf.format(startDate)}")
+            Text(text= "Start: ${timeFormat.format(startDate)}")
+            if (session.endTimeMillis != null){
+                val endDate = Date(session.endTimeMillis)
+                Text(text= "Stop: ${timeFormat.format(endDate)}")
+            }
         }
     }
 }
