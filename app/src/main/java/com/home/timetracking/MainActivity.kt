@@ -5,10 +5,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
@@ -36,6 +43,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
     val currentSessionTime by viewModel.currentSessionTime.collectAsState()
     val elapsedTime = stopWatchViewModel.elapsedTime
+    val gradientBrush = Brush.linearGradient(listOf(Color.Black, Color.Red))
 
     val totalTime = remember(sessions, currentSessionStart) {
         viewModel.totalTimeTodayMillis()
@@ -80,15 +88,23 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
             }
         }
 
-        sessions.forEach { session ->
-            val sdf = SimpleDateFormat("yyyy-MM-dd")
-            val timeFormat = SimpleDateFormat("HH:mm:ss")
-            val startDate = Date(session.startTimeMillis)
-            Text(text = "Date: ${sdf.format(startDate)}")
-            Text(text= "Start: ${timeFormat.format(startDate)}")
-            if (session.endTimeMillis != null){
-                val endDate = Date(session.endTimeMillis)
-                Text(text= "Stop: ${timeFormat.format(endDate)}")
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            sessions.forEach { session ->
+                Column(modifier = Modifier
+                    .padding(8.dp)
+                    .border(width = 2.dp, Color.Black, shape = RoundedCornerShape(9.dp))
+                    .padding(8.dp)
+                ) {
+                    val sdf = SimpleDateFormat("yyyy-MM-dd")
+                    val timeFormat = SimpleDateFormat("HH:mm:ss")
+                    val startDate = Date(session.startTimeMillis)
+                    Text(text = "Date: ${sdf.format(startDate)}")
+                    Text(text= "Start: ${timeFormat.format(startDate)}")
+                    if (session.endTimeMillis != null){
+                        val endDate = Date(session.endTimeMillis)
+                        Text(text= "Stop: ${timeFormat.format(endDate)}")
+                    }
+                }
             }
         }
     }
