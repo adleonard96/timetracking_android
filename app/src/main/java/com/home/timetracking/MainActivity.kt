@@ -82,6 +82,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
             Button(
                 onClick = {
                     viewModel.clearSessions()
+                    stopWatchViewModel.reset()
                 }
             ) {
                 Text("Clear")
@@ -89,7 +90,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
         }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            sessions.forEach { session ->
+            sessions.reversed().forEach { session ->
                 Column(modifier = Modifier
                     .padding(8.dp)
                     .border(width = 2.dp, Color.Black, shape = RoundedCornerShape(9.dp))
