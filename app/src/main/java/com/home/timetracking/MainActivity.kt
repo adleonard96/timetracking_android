@@ -39,7 +39,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchViewModel: StopwatchViewModel = viewModel()) {
+fun TimeTrackerScreen(
+    viewModel: TimeTrackerViewModel = viewModel(),
+    stopWatchViewModel: StopwatchViewModel = viewModel()
+) {
     val sessions by viewModel.sessions.collectAsState()
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
     val currentSessionTime by viewModel.currentSessionTime.collectAsState()
@@ -68,7 +71,7 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
             text = "Hours today: %.5f".format(elapsedTime / 3_600_000.0),
             style = MaterialTheme.typography.headlineMedium
         )
-        Row(){
+        Row() {
             Button(
                 onClick = {
                     if (currentSessionStart == null) {
@@ -94,19 +97,35 @@ fun TimeTrackerScreen(viewModel: TimeTrackerViewModel = viewModel(), stopWatchVi
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             sessions.reversed().forEach { session ->
-                Column(modifier = Modifier
-                    .padding(8.dp)
-                    .border(width = 2.dp, Color.Black, shape = RoundedCornerShape(9.dp))
-                    .padding(8.dp)
+                Column(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .border(width = 2.dp, Color.Black, shape = RoundedCornerShape(9.dp))
+                        .padding(8.dp)
                 ) {
                     val sdf = SimpleDateFormat("yyyy-MM-dd")
                     val timeFormat = SimpleDateFormat("HH:mm:ss")
                     val startDate = Date(session.startTimeMillis)
+                    val stopped = session.endTimeMillis != null
                     Text(text = "Date: ${sdf.format(startDate)}")
-                    Text(text= "Start: ${timeFormat.format(startDate)}")
-                    if (session.endTimeMillis != null){
+
+                    if (stopped) {
                         val endDate = Date(session.endTimeMillis)
-                        Text(text= "Stop: ${timeFormat.format(endDate)}")
+                        Text(text = "Stop: ${timeFormat.format(endDate)}")
+                    }
+                    Text(text = "Start: ${timeFormat.format(startDate)}")
+
+                    if (stopped) {
+                        Button(
+                            onClick = {
+                                viewModel.removeSession(
+                                    session.startTimeMillis,
+                                    session.endTimeMillis
+                                )
+                                stopWatchViewModel.deduct(session.endTimeMillis - session.startTimeMillis)
+                            }) {
+                                Text(text = "Delete Session")
+                            }
                     }
                 }
             }

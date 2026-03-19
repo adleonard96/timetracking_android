@@ -2,6 +2,7 @@ import androidx.lifecycle.ViewModel
 import com.home.timetracking.Session
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlin.collections.map
 
@@ -27,6 +28,9 @@ class TimeTrackerViewModel : ViewModel() {
         }
     }
 
+    fun removeSession(start: Long, stop: Long) {
+        _sessions.update { it.filterNot { it -> it.startTimeMillis == start && it.endTimeMillis == stop } }
+    }
     fun clearSessions() {
         _sessions.update {
             emptyList()

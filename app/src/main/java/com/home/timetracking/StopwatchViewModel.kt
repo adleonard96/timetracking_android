@@ -31,6 +31,10 @@ class StopwatchViewModel : ViewModel(){
         running = false
     }
 
+    fun deduct(ms: Long) {
+        elapsedTime -= ms
+    }
+
     fun reset() {
         running = false
         elapsedTime = 0L
