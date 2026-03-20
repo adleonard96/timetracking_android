@@ -55,6 +55,7 @@ dependencies {
     // Activity for Compose
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("com.google.android.material:material:1.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.3.2") // Check for the latest version on [OkHttp's GitHub](https://github.com)
     implementation(libs.appcompat)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)

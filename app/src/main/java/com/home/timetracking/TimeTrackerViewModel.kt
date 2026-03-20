@@ -24,7 +24,7 @@ class TimeTrackerViewModel : ViewModel() {
         currentTimeMillis()
 
         _sessions.update {
-            it + Session(startTimeMillis = start, endTimeMillis = null)
+            it + Session(startTimeMillis = start, endTimeMillis = null, synced = false)
         }
     }
 
