@@ -1,10 +1,8 @@
 package com.home.timetracking
 
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 
@@ -36,7 +34,11 @@ fun syncSessions(sessions: List<Session>) {
     val joined = sessionStrings.joinToString()
     val mediaType = "application/json".toMediaType()
     val body = "[${joined}]".toRequestBody(mediaType)
-    val request =
-        Request.Builder().url("http://192.168.1.21:8081/sync").method("POST", body).build()
-    client.newCall(request).execute()
+    try {
+        val request =
+            Request.Builder().url("http://192.168.1.21:8081/sync").method("POST", body).build()
+        client.newCall(request).execute()
+    } catch (e: Exception) {
+        println(e)
+    }
 }
