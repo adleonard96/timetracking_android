@@ -45,7 +45,6 @@ fun TimeTrackerScreen(
 ) {
     val sessions by viewModel.sessions.collectAsState()
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
-    val currentSessionTime by viewModel.currentSessionTime.collectAsState()
     val elapsedTime = stopWatchViewModel.elapsedTime
     val gradientBrush = Brush.linearGradient(listOf(Color.Black, Color.Red))
 
@@ -93,6 +92,13 @@ fun TimeTrackerScreen(
             ) {
                 Text("Clear")
             }
+            Button(
+                onClick = {
+                    syncSessions(viewModel.sessions.value)
+                }, modifier = Modifier.padding(start = 4.dp)
+            ) {
+                Text("Sync")
+            }
         }
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -109,23 +115,27 @@ fun TimeTrackerScreen(
                     val stopped = session.endTimeMillis != null
                     Text(text = "Date: ${sdf.format(startDate)}")
 
-                    if (stopped) {
-                        val endDate = Date(session.endTimeMillis)
+                    session.endTimeMillis?.let { endMillis ->
+                        val endDate = Date(endMillis)
                         Text(text = "Stop: ${timeFormat.format(endDate)}")
                     }
                     Text(text = "Start: ${timeFormat.format(startDate)}")
 
-                    if (stopped) {
+                    if (session.endTimeMillis != null) {
                         Button(
                             onClick = {
+                                val endMillis = session.endTimeMillis!!
+
                                 viewModel.removeSession(
                                     session.startTimeMillis,
-                                    session.endTimeMillis
+                                    endMillis
                                 )
-                                stopWatchViewModel.deduct(session.endTimeMillis - session.startTimeMillis)
-                            }) {
-                                Text(text = "Delete Session")
+
+                                stopWatchViewModel.deduct(endMillis - session.startTimeMillis)
                             }
+                        ) {
+                            Text(text = "Delete Session")
+                        }
                     }
                 }
             }
