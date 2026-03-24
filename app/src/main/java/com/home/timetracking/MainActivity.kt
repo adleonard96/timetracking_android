@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -68,7 +69,8 @@ fun TimeTrackerScreen(
         Text(
 //            text = "Total today: ${formatDuration(totalTime)}",
             text = "Hours today: %.5f".format(elapsedTime / 3_600_000.0),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.White
         )
         Row() {
             Button(
@@ -103,10 +105,12 @@ fun TimeTrackerScreen(
 
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             sessions.reversed().forEach { session ->
+                val shape = RoundedCornerShape(9.dp)
                 Column(
                     modifier = Modifier
                         .padding(8.dp)
                         .border(width = 2.dp, Color.Black, shape = RoundedCornerShape(9.dp))
+                        .background(Color.White, shape = shape)
                         .padding(8.dp)
                 ) {
                     val sdf = SimpleDateFormat("yyyy-MM-dd")
