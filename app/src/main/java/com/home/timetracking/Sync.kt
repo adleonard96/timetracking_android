@@ -1,5 +1,8 @@
 package com.home.timetracking
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -7,7 +10,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 
 
-fun syncSessions(sessions: List<Session>) {
+fun syncSessions(context: Context, sessions: List<Session>) {
     if (sessions.isEmpty()) {
         return
     }
@@ -37,8 +40,15 @@ fun syncSessions(sessions: List<Session>) {
     try {
         val request =
             Request.Builder().url("http://192.168.1.21:8081/sync").method("POST", body).build()
-        client.newCall(request).execute()
+        Thread {
+            try {
+                val response = client.newCall(request).execute()
+                Log.d("SYNC", "Response: ${response.code}")
+            } catch (e: Exception) {
+                Log.e("SYNC_ERROR", "Full error", e)
+                Toast.makeText(context, e.message ?: "Unknown error", Toast.LENGTH_LONG).show()
+            }
+        }.start()
     } catch (e: Exception) {
-        println(e)
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
@@ -94,9 +95,11 @@ fun TimeTrackerScreen(
             ) {
                 Text("Clear")
             }
+            val context = LocalContext.current
             Button(
+
                 onClick = {
-                    syncSessions(viewModel.sessions.value)
+                    syncSessions(context, viewModel.sessions.value)
                 }, modifier = Modifier.padding(start = 4.dp)
             ) {
                 Text("Sync")
