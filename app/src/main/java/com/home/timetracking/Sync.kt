@@ -18,7 +18,7 @@ fun syncSessions(context: Context, sessions: List<Session>) {
     val sessionStrings = ArrayList<String>()
     val sdf = SimpleDateFormat("yyyy-MM-dd")
     val timeFormat = SimpleDateFormat("HH:mm:ss")
-    val dayOfWeek = SimpleDateFormat("E")
+    val dayOfWeek = SimpleDateFormat("EEEE")
     for (session in sessions) {
         if (session.endTimeMillis != null) {
             sessionStrings.add(
