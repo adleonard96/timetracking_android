@@ -46,7 +46,6 @@ fun syncSessions(context: Context, sessions: List<Session>) {
                 Log.d("SYNC", "Response: ${response.code}")
             } catch (e: Exception) {
                 Log.e("SYNC_ERROR", "Full error", e)
-                Toast.makeText(context, e.message ?: "Unknown error", Toast.LENGTH_LONG).show()
             }
         }.start()
     } catch (e: Exception) {
