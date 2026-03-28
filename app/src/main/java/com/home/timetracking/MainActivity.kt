@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TimeTrackerScreen(
     viewModel: TimeTrackerViewModel = viewModel(),
-    stopWatchViewModel: StopwatchViewModel = viewModel()
+    stopWatchViewModel: StopwatchViewModel = viewModel(),
 ) {
     val sessions by viewModel.sessions.collectAsState()
     val currentSessionStart by viewModel.currentSessionStart.collectAsState()
@@ -62,7 +62,8 @@ fun TimeTrackerScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(top = 25.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
