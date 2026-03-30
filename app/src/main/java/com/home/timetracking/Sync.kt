@@ -3,6 +3,9 @@ package com.home.timetracking
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -10,9 +13,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 
 
-fun syncSessions(context: Context, sessions: List<Session>) {
+suspend fun syncSessions(context: Context, sessions: List<Session>): Boolean {
     if (sessions.isEmpty()) {
-        return
+        return false
     }
     val client = OkHttpClient()
     val sessionStrings = ArrayList<String>()
@@ -40,14 +43,14 @@ fun syncSessions(context: Context, sessions: List<Session>) {
     try {
         val request =
             Request.Builder().url("http://192.168.1.21:8081/sync").method("POST", body).build()
-        Thread {
             try {
                 val response = client.newCall(request).execute()
                 Log.d("SYNC", "Response: ${response.code}")
+                return response.isSuccessful
             } catch (e: Exception) {
                 Log.e("SYNC_ERROR", "Full error", e)
             }
-        }.start()
     } catch (e: Exception) {
     }
+    return  false
 }

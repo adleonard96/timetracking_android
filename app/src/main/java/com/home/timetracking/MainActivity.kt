@@ -21,7 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -100,7 +104,15 @@ fun TimeTrackerScreen(
             Button(
 
                 onClick = {
-                    syncSessions(context, viewModel.sessions.value)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val successful = withContext(Dispatchers.IO) {
+                            syncSessions(context, viewModel.sessions.value)
+                        }
+                        if (successful) {
+                            viewModel.clearSessions()
+                            stopWatchViewModel.reset()
+                        }
+                    }
                 }, modifier = Modifier.padding(start = 4.dp)
             ) {
                 Text("Sync")
