@@ -43,14 +43,14 @@ suspend fun syncSessions(context: Context, sessions: List<Session>): Boolean {
     try {
         val request =
             Request.Builder().url("http://192.168.1.21:8081/sync").method("POST", body).build()
-            try {
-                val response = client.newCall(request).execute()
-                Log.d("SYNC", "Response: ${response.code}")
-                return response.isSuccessful
-            } catch (e: Exception) {
-                Log.e("SYNC_ERROR", "Full error", e)
-            }
+        try {
+            val response = client.newCall(request).execute()
+            Log.d("SYNC", "Response: ${response.code}")
+            return response.isSuccessful
+        } catch (e: Exception) {
+            Log.e("SYNC_ERROR", "Full error", e)
+        }
     } catch (e: Exception) {
     }
-    return  false
+    return false
 }

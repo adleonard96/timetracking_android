@@ -2,6 +2,7 @@ package com.home.timetracking
 
 import TimeTrackerViewModel
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -111,6 +112,7 @@ fun TimeTrackerScreen(
                         if (successful) {
                             viewModel.clearSessions()
                             stopWatchViewModel.reset()
+                            Toast.makeText(context, "Sync was successful!", Toast.LENGTH_LONG).show()
                         }
                     }
                 }, modifier = Modifier.padding(start = 4.dp)
