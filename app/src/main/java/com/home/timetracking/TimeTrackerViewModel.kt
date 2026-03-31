@@ -1,14 +1,21 @@
+import android.content.Context
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import com.home.timetracking.Session
+import com.home.timetracking.dataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.collections.map
 
 class TimeTrackerViewModel : ViewModel() {
 
     private val _sessions = MutableStateFlow<List<Session>>(emptyList())
+    private val json = Json { ignoreUnknownKeys = true }
     val sessions: StateFlow<List<Session>> = _sessions
 
     private val _currentSessionStart = MutableStateFlow<Long?>(null)
@@ -68,5 +75,12 @@ class TimeTrackerViewModel : ViewModel() {
             return 0
         }
         return _currentSessionLength.value!!
+    }
+
+    suspend fun saveList(context: Context) {
+        val key = stringPreferencesKey("sessions")
+        context.dataStore.edit {
+            prefs -> prefs[key] = json.encodeToString(_sessions.value)
+        }
     }
 }

@@ -47,7 +47,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
-
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     // ViewModel + Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
 
@@ -60,4 +61,5 @@ dependencies {
     implementation(libs.androidx.navigation.ui)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
 }
