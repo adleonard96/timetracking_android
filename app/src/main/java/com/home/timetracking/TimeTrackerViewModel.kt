@@ -83,4 +83,11 @@ class TimeTrackerViewModel : ViewModel() {
             prefs -> prefs[key] = json.encodeToString(_sessions.value)
         }
     }
+
+    suspend fun removeSessions(context: Context) {
+        val key = stringPreferencesKey("sessions")
+        context.dataStore.edit {
+                prefs -> prefs[key] = json.encodeToString(_sessions.value)
+        }
+    }
 }
